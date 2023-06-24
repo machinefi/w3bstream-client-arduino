@@ -6,20 +6,14 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-Iotex	KEYWORD1
-IoTeX	KEYWORD1
-iotex	KEYWORD1
-
 # Namespaces
-api	KEYWORD1
-abi	KEYWORD1
-responsetypes	KEYWORD1
 
 # Classes
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
+
 
 #######################################
 # Structures (KEYWORD3)
@@ -28,4 +22,3 @@ responsetypes	KEYWORD1
 ######################################
 # Constants (LITERAL1)
 #######################################
-

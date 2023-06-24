@@ -1,54 +1,52 @@
 {
-    "name": "WSIoTSDK",
-    "description": "A simple PSA-API client implementation in C++ for the IoTeX blockchain.",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/iotexproject/arduino-sdk"
-    },
-    "version": "0.3.1",
-    "authors": [
-      {
-        "name": "IoTeX",
-        "email": "suppor@iotex.io",
-        "url": "https://iotex.io/"
-      }
+  "name": "W3bstreamClient",
+  "description": "A client library for interacting with w3bstream",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iotexproject/arduino-sdk"
+  },
+  "version": "0.3.1",
+  "authors": [
+    {
+      "name": "IoTeX",
+      "email": "support@iotex.io",
+      "url": "https://iotex.io/"
+    }
+  ],
+  "platforms": [
+    "espressif8266",
+    "espressif32",
+    "atmelsam"
+  ],
+  "frameworks": [
+    "arduino"
+  ],
+  "build": {
+    "flags": [
+      "-I src"
     ],
-    "includeDir": "src",
-    "srcDir": "src",
-    "frameworks": "arduino",
-    "platforms": [
-      "espressif8266",
-      "espressif32",
-      "atmelsam"
+    "srcFilter": [
     ],
-    "export": {
-      "include": [
-        "src/*",
-        "src/include/*",
-        "examples/*",
-        "*.md",
-        "*.json",
-        "*.properties",
-        "LICENSE",
-        "*.ini",
-        "keywords.txt"
-      ],
-      "exclude": [
-        "*/*.txt"
-      ]
-    },
-    "build": {
-        "flags":
-        [
-            "-I src",
-            "-I src/application/devnet",
-            "-I src/backends/"
-        ],
-        "srcFilter": 
-        [
-          "-<src/crypto/tests/*>"
-        ],
-        "libCompatMode": "strict"
-    },
-    "libLDFMode": "deep+"
+    "libCompatMode": "strict"
+  },
+  "lib_ldf_mode": "deep+",
+  "export": {
+    "include": [
+      "src/*",
+      "src/include/*",
+      "examples/*",
+      "*.md",
+      "*.json",
+      "*.properties",
+      "LICENSE",
+      "*.ini",
+      "keywords.txt"
+    ],
+    "exclude": [
+      "doc/*",
+      "tests/*",
+      "tools/*",
+      "**/*.txt"
+    ]
   }
+}

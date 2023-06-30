@@ -2,9 +2,10 @@
 
 
 
-## Developing in VSCode
+## Developing in VSCode
 
 Open the folder in VSCode. You whould see a pop up on the bottom left asking to install the recommended extensions. Install them.  
+If the popup doesn't appear, use the following guide to [install recommended extensions](https://code.visualstudio.com/docs/editor/extension-marketplace#_recommended-extensions).  
 
 ### Building with VSCode CMake extension
 

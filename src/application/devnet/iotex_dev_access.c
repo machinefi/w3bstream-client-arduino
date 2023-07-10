@@ -3,10 +3,11 @@
 #include <string.h>
 
 #include "include/application/devnet/iotex_dev_access.h"
-
 #include "include/psa/crypto.h"
+#include "include/hal/flash/flash_common.h"
+//#include "include/hal/nvs/nvs_common.h"
 
-extern psa_key_id_t key_id;
+extern psa_key_id_t g_signkey;
 
 iotex_dev_ctx_t *dev_ctx = NULL;
 
@@ -21,6 +22,9 @@ int iotex_dev_access_init(void)
 	memset(dev_ctx, 0, sizeof(iotex_dev_ctx_t));
 	memcpy(dev_ctx->mqtt_ctx.topic[0], IOTEX_MQTT_TOPIC_DEFAULT, strlen(IOTEX_MQTT_TOPIC_DEFAULT));
 	memcpy(dev_ctx->mqtt_ctx.token, IOTEX_TOKEN_DEFAULT, strlen(IOTEX_TOKEN_DEFAULT));
+
+	iotex_hal_flash_drv_init();
+//	iotex_hal_nvs_drv_init();
 
 	dev_ctx->inited = 1;
 
@@ -213,7 +217,7 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
  			return IOTEX_DEV_ACCESS_ERR_BAD_INPUT_PARAMETER;
  	}
 
- 	psa_sign_message( key_id, PSA_ALG_ECDSA(PSA_ALG_SHA_256), (const uint8_t *)message, message_len, (uint8_t *)sign_buf, 64, &sign_len);
+ 	psa_sign_message( g_signkey, PSA_ALG_ECDSA(PSA_ALG_SHA_256), (const uint8_t *)message, message_len, (uint8_t *)sign_buf, 64, &sign_len);
 
  	upload.has_payload = true;
  	upload.payload.sign.size = sign_len;

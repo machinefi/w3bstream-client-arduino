@@ -1926,6 +1926,20 @@ inline int iotex_ecp_calc_pub_key( psa_key_type_t type, uint8_t *key_buffer, siz
     return 0;
 }
 
+inline int iotex_psa_ecp_export_key_from_raw_data(psa_key_type_t type, const uint8_t *key_buffer, uint8_t *data, size_t *data_length )
+{
+	uECC_Curve curve = uECC_secp256r1();
+    
+    if( type == PSA_ECC_FAMILY_SECP_K1 ) {
+        curve = uECC_secp256k1();
+    }
+
+    uECC_compute_public_key(key_buffer, data, curve);
+    *data_length = 64;
+
+    return 0;    
+}
+
 /****************************************************************/
 /* ECDSA */
 /****************************************************************/

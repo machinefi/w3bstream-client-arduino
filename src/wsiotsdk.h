@@ -11,11 +11,10 @@ class Devnet
 {
   private:
 
-
   public:
 
     void begin(void);
-    void begin(iotex_gettime time_f, iotex_mqtt_pub pub_f, iotex_mqtt_sub sub_f);
+    uint8_t * begin(iotex_gettime time_f, iotex_mqtt_pub pub_f, iotex_mqtt_sub sub_f);
     void setTimeFunction(iotex_gettime time_f);
     void setMQTTFunctions(iotex_mqtt_pub pub_f, iotex_mqtt_sub sub_f);
     void setDevnetToken(const char token[], int len);
@@ -31,7 +30,7 @@ class Devnet
 #ifdef __cplusplus
 extern "C" {
 #endif
-int iotex_wsiotsdk_init(iotex_gettime get_time_func, iotex_mqtt_pub mqtt_pub, iotex_mqtt_sub mqtt_sub);
+uint8_t * iotex_wsiotsdk_init(iotex_gettime get_time_func, iotex_mqtt_pub mqtt_pub, iotex_mqtt_sub mqtt_sub);
 #ifdef __cplusplus
 }
 #endif

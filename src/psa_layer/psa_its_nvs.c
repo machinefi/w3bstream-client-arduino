@@ -1,6 +1,6 @@
 #include "include/common.h"
 
-#if defined(IOTEX_PSA_ITS_NVS_C)
+#if defined(CONFIG_PSA_ITS_NVS_C)
 
 #if defined(IOTEX_PLATFORM_C)
 #include "iotex/platform.h"
@@ -12,8 +12,8 @@
 #include <windows.h>
 #endif
 
-#include "server/crypto/psa_crypto_its.h"
-#include "hal/nvs/nvs_common.h"
+#include "include/svc/crypto/psa_crypto_its.h"
+#include "include/hal/nvs/nvs_common.h"
 
 #include <limits.h>
 #include <stdint.h>

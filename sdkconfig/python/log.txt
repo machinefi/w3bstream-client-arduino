@@ -1,0 +1,4 @@
+D:\Repos\w3bstream-client-arduino\sdkconfig\Kconfig
+D:\Repos\w3bstream-client-arduino\src\application\devnet\Kconfig
+D:\Repos\w3bstream-client-arduino\src\hal\Kconfig
+D:\Repos\w3bstream-client-arduino\src\psa_layer\Kconfig

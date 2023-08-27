@@ -1,4 +1,0 @@
-C:\Users\74271\Documents\Arduino\libraries\w3bstream-client-arduino\sdkconfig\Kconfig
-C:\Users\74271\Documents\Arduino\libraries\w3bstream-client-arduino\src\application\devnet\Kconfig
-C:\Users\74271\Documents\Arduino\libraries\w3bstream-client-arduino\src\hal\Kconfig
-C:\Users\74271\Documents\Arduino\libraries\w3bstream-client-arduino\src\psa_layer\Kconfig

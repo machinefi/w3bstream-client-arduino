@@ -55,6 +55,7 @@
  *  uECC_platform_specific.c -- Implementation of platform specific functions
  */
 
+#include "include/common.h"
 
 #if defined(unix) || defined(__linux__) || defined(__unix__) || \
     defined(__unix) |  (defined(__APPLE__) && defined(__MACH__)) || \
@@ -103,7 +104,7 @@ int default_CSPRNG(uint8_t *dest, unsigned int size) {
 
 #else
 
-#if defined(ARDUINO)
+#if defined(CONFIG_PLATFORM_ARDUINO)
 
 #include "Arduino.h"
 

@@ -3,6 +3,7 @@
 #include "include/iotex/platform.h"
 
 #if defined(IOTEX_PSA_CRYPTO_C)
+#if defined(CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT)
 
 #if defined(IOTEX_PSA_CRYPTO_CONFIG)
 #include "check_crypto_config.h"
@@ -27,7 +28,7 @@
 
 #include "include/svc/cipher_wrap.h"
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_IOTEX))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_IOTEX
 #include "include/iotex/aes.h"
 #include "include/iotex/asn1.h"
 #include "include/iotex/asn1write.h"
@@ -56,7 +57,9 @@
 #include "include/iotex/sha1.h"
 #include "include/iotex/sha256.h"
 #include "include/iotex/sha512.h"
-#elif ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#endif
+
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
 
 #include "include/tinycrypt/constants.h"
 #include "include/tinycrypt/sha256.h"
@@ -375,21 +378,21 @@ inline int iotex_sha1( const unsigned char *input, size_t ilen, unsigned char ou
 /****************************************************************/        
 inline void iotex_sha256_init( iotex_sha256_context *ctx )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
     ctx->sha256_ctx = malloc(sizeof(struct tc_sha256_state_struct));
 
     if(ctx->sha256_ctx)
         (void)tc_sha256_init((TCSha256State_t)ctx->sha256_ctx);
 #endif
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     mbedtls_sha256_init( (mbedtls_sha256_context *)ctx );
 #endif
 }
 
 inline void iotex_sha256_free( iotex_sha256_context *ctx )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
     if(ctx->sha256_ctx)
     {
         free(ctx->sha256_ctx);
@@ -397,14 +400,14 @@ inline void iotex_sha256_free( iotex_sha256_context *ctx )
     }        
 #endif
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     mbedtls_sha256_free( (mbedtls_sha256_context *)ctx );
 #endif
 }
 
 inline void iotex_sha256_clone( iotex_sha256_context *dst, const iotex_sha256_context *src )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
 	if (NULL == dst->sha256_ctx)
 		iotex_sha256_init(dst);
 
@@ -415,14 +418,14 @@ inline void iotex_sha256_clone( iotex_sha256_context *dst, const iotex_sha256_co
     memcpy(dst->sha256_ctx, src->sha256_ctx, sizeof(struct tc_sha256_state_struct));
 #endif
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     mbedtls_sha256_clone( (mbedtls_sha256_context *)dst, (const mbedtls_sha256_context *)src );
 #endif
 }
 
 inline int iotex_sha256_starts( iotex_sha256_context *ctx, int is224 )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
 	return mbedtls_sha256_starts( (mbedtls_sha256_context *)ctx, is224 );
 #else
 	return 0;
@@ -431,33 +434,33 @@ inline int iotex_sha256_starts( iotex_sha256_context *ctx, int is224 )
 
 inline int iotex_sha256_update( iotex_sha256_context *ctx, const unsigned char *input, size_t ilen )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
     (void)tc_sha256_update ((TCSha256State_t)ctx->sha256_ctx, input, ilen);
 
     return 0;
 #endif
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     return mbedtls_sha256_update( (mbedtls_sha256_context *)ctx, input, ilen );
 #endif
 }
 
 inline int iotex_sha256_finish( iotex_sha256_context *ctx, unsigned char *output )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
     (void)tc_sha256_final(output, (TCSha256State_t)ctx->sha256_ctx);
 
     return 0;
 #endif
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     return mbedtls_sha256_finish( (mbedtls_sha256_context *)ctx, output );
 #endif
 }
 
 inline int iotex_internal_sha256_process( iotex_sha256_context *ctx, const unsigned char data[64] )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
 	return mbedtls_internal_sha256_process( (mbedtls_sha256_context *)ctx, data);
 #else
 	return 0;
@@ -466,7 +469,7 @@ inline int iotex_internal_sha256_process( iotex_sha256_context *ctx, const unsig
 
 inline int iotex_sha256( const unsigned char *input, size_t ilen, unsigned char *output, int is224 )
 {
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
     struct tc_sha256_state_struct s;
 
     (void)tc_sha256_init(&s);
@@ -477,7 +480,7 @@ inline int iotex_sha256( const unsigned char *input, size_t ilen, unsigned char 
 #endif
 
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
     return mbedtls_sha256( input, ilen, output, is224 );
 #endif
 }
@@ -1896,7 +1899,7 @@ inline int iotex_ecp_point_write_binary( const iotex_ecp_group *grp,
     return PSA_SUCCESS;    
 }
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_TINYCRYPO))
+#ifdef CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT
 inline int iotex_ecp_gen_key( psa_key_type_t type, uint8_t *key_buffer, size_t key_buffer_size )
 {
     if(key_buffer == NULL || key_buffer_size != 32)
@@ -1944,7 +1947,7 @@ inline int iotex_psa_ecp_export_key_from_raw_data(psa_key_type_t type, const uin
 /* ECDSA */
 /****************************************************************/
 
-#if ((IOTEX_PSA_CRYPTO_MODULE_USE) == (CRYPTO_USE_MBEDTLS))
+#ifdef PSA_CRYPTO_BACKENDS_MBEDTLS
 inline int iotex_ecdsa_sign( iotex_ecp_group *grp, iotex_mpi *r, iotex_mpi *s,
                 const iotex_mpi *d, const unsigned char *buf, size_t blen,
                 int (*f_rng)(void *, unsigned char *, size_t), void *p_rng )
@@ -2258,4 +2261,5 @@ void iotex_platform_zeroize( void *buf, size_t len )
 }
 #endif /* IOTEX_PLATFORM_ZEROIZE_ALT */
 
+#endif /* CONFIG_PSA_CRYPTO_BACKENDS_TINYCRYPT */
 #endif /* IOTEX_PSA_CRYPTO_C */

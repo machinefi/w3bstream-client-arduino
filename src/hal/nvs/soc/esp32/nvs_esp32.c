@@ -1,6 +1,7 @@
 #include "include/common.h"
 
-#ifdef IOTEX_PSA_ITS_NVS_C
+#if defined(CONFIG_PSA_ITS_NVS_C) && defined(CONFIG_PLATFORM_ESPRESSIF)
+
 #include <string.h>
 #include "nvs_flash.h"
 #include "hal/nvs/nvs_common.h"

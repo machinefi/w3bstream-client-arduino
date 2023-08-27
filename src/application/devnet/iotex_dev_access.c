@@ -2,10 +2,16 @@
 #include <stdint.h>
 #include <string.h>
 
+#include "include/common.h"
 #include "include/application/devnet/iotex_dev_access.h"
 #include "include/psa/crypto.h"
+#ifdef CONFIG_PSA_ITS_FLASH_C
 #include "include/hal/flash/flash_common.h"
-//#include "include/hal/nvs/nvs_common.h"
+#endif
+
+#ifdef CONFIG_PSA_ITS_NVS_C
+#include "include/hal/nvs/nvs_common.h"
+#endif
 
 extern psa_key_id_t g_signkey;
 
@@ -20,11 +26,16 @@ int iotex_dev_access_init(void)
 		return IOTEX_DEV_ACCESS_ERR_ALLOCATE_FAIL;
 
 	memset(dev_ctx, 0, sizeof(iotex_dev_ctx_t));
-	memcpy(dev_ctx->mqtt_ctx.topic[0], IOTEX_MQTT_TOPIC_DEFAULT, strlen(IOTEX_MQTT_TOPIC_DEFAULT));
-	memcpy(dev_ctx->mqtt_ctx.token, IOTEX_TOKEN_DEFAULT, strlen(IOTEX_TOKEN_DEFAULT));
+	memcpy(dev_ctx->mqtt_ctx.topic[0], CONFIG_APP_DEVNET_ACCESS_STUDIO_TOPIC, strlen(CONFIG_APP_DEVNET_ACCESS_STUDIO_TOPIC));
+	memcpy(dev_ctx->mqtt_ctx.token, CONFIG_APP_DEVNET_ACCESS_STUDIO_TOKEN, strlen(CONFIG_APP_DEVNET_ACCESS_STUDIO_TOKEN));   
 
+#ifdef CONFIG_PSA_ITS_FLASH_C
 	iotex_hal_flash_drv_init();
-//	iotex_hal_nvs_drv_init();
+#endif
+
+#ifdef CONFIG_PSA_ITS_NVS_C
+	iotex_hal_nvs_drv_init();
+#endif
 
 	dev_ctx->inited = 1;
 

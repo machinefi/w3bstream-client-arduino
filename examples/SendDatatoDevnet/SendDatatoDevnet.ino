@@ -23,49 +23,12 @@ time_t now;
 time_t nowish = 1510592825;
 
 int8_t TIME_ZONE = -5;          //NYC(USA): -5 UTC
-static const uint8_t private_key[] = {0xa1, 0x73, 0x6f, 0xbf, 0x37, 0xa2, 0xfc, 0xb8, 0xfe, 0xe2, 0x02, 0xdb, 0x0c, 0x63, 0x91, 0xdf, 0xa4, 0x61, 0x86, 0x29, 0xb1, 0x86, 0xa6, 0x90, 0x65, 0x85, 0x2d, 0xfc, 0xd8, 0x8f, 0x58, 0x19};
-static const char ssid[] = "StayHungry";
-static const char pass[] = "zjn.19821225";
 
-psa_key_id_t key_id = 0;
+static const char ssid[] = "XXX";
+static const char pass[] = "YYYY";
 
-#define KEY_BITS    256
 #define THINGNAME   "IoTeX_Demo"
-
-#define USER_TOKEN  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJQYXlsb2FkIjoiOTAyODE3NDM1MDA2OTc2MSIsImlzcyI6InczYnN0cmVhbSJ9._KxP2gGC33CFWq0H31M3MNstuM1ygAj5Yk10sYnWSEc"
-#define USER_TOPIC  "eth_0x31c3785bebe03cc5ba691c486d6d1cdf8bb438c4_arduino_test"
-
-void iotex_import_key(void)
-{
-    psa_key_attributes_t attributes = PSA_KEY_ATTRIBUTES_INIT;
-    psa_status_t status;
-    unsigned char prikey[32] = {0};
-    unsigned int  prikey_len = 0;
-
-    uint8_t exported[PSA_KEY_EXPORT_ECC_PUBLIC_KEY_MAX_SIZE(KEY_BITS)];	
-	  size_t exported_length = 0;
-    char dev_address[100] = {0};
-
-    memcpy(prikey, private_key, sizeof(prikey));
-
-    /* Set key attributes */
-    psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_SIGN_HASH | PSA_KEY_USAGE_VERIFY_HASH);
-    psa_set_key_algorithm(&attributes, PSA_ALG_ECDSA(PSA_ALG_SHA_256));
-    psa_set_key_type(&attributes, PSA_KEY_TYPE_ECC_KEY_PAIR(PSA_ECC_FAMILY_SECP_K1));
-    psa_set_key_bits(&attributes, 256);
-
-    /* Import the key */
-    status = psa_import_key(&attributes, prikey, 32, &key_id);
-    if (status != PSA_SUCCESS) {
-        key_id = 0;
-        return;
-    }
-
-    status = psa_export_public_key(key_id, exported, sizeof(exported), &exported_length);
-	  if (status != PSA_SUCCESS) {
-        return;
-	  }
-}
+#define IOTEX_DEBUG_SHOW_PUBLIC_KEY
 
 int iotex_mqtt_pubscription(unsigned char *topic, unsigned char *buf, unsigned int buflen, int qos) {
     return client.publish((const char *)topic, (const uint8_t *)buf, buflen, false);
@@ -197,6 +160,8 @@ void iotex_devnet_upload_data_example_raw(void) {
 
 void setup()
 {
+    uint8_t *public_key = NULL;
+    
     Serial.begin(115200);
     delay(1000);
 
@@ -217,11 +182,16 @@ void setup()
 
     connectToMqtt();
 
-    iotex_wsiotsdk_init(iotex_time_set_func, iotex_mqtt_pubscription, iotex_mqtt_subscription); 
-    iotex_dev_access_set_token(USER_TOKEN, strlen(USER_TOKEN));
-    iotex_dev_access_set_mqtt_topic(USER_TOPIC, strlen(USER_TOPIC), 0);
-
-    iotex_import_key();  
+    public_key = iotex_wsiotsdk_init(iotex_time_set_func, iotex_mqtt_pubscription, iotex_mqtt_subscription); 
+ 
+#ifdef IOTEX_DEBUG_SHOW_PUBLIC_KEY 
+    Serial.println("Public Key :");
+    for (int i = 0; i < 64; i++) {
+         Serial.printf("%02x ", public_key[i]); 
+    }
+    Serial.println();
+#endif
+    
 }
 
 void loop()

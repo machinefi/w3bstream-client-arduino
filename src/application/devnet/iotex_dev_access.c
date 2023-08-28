@@ -197,6 +197,7 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
 
  	switch (type) {
 
+#ifdef CONFIG_SUPPORT_JSON_FORMAT
  		case IOTEX_USER_DATA_TYPE_JSON:
 
  			message = cJSON_PrintUnformatted((const cJSON *)buf);
@@ -206,6 +207,9 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
  			memcpy(upload.payload.user.bytes, message, message_len);
 
  			break;
+#endif
+
+#ifdef CONFIG_SUPPORT_PB_FORMAT
  		case IOTEX_USER_DATA_TYPE_PB:
 
  			upload.payload.user.size = buf_len;
@@ -215,6 +219,9 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
  			message_len = buf_len;
 
  			break;
+#endif
+
+#ifdef CONFIG_SUPPORT_RAW_FORMAT
  		case IOTEX_USER_DATA_TYPE_RAW:
 
  			upload.payload.user.size = buf_len;
@@ -224,8 +231,10 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
  			message_len = buf_len;
 
  			break;
+#endif
+			
  		default:
- 			return IOTEX_DEV_ACCESS_ERR_BAD_INPUT_PARAMETER;
+ 			return IOTEX_DEV_ACCESS_ERR_SEND_DATA_FORMAT_NOT_SUPPORT;
  	}
 
 #ifdef CONFIG_USER_DATA_SIGNATURE_ENABLE

@@ -228,13 +228,19 @@ int iotex_dev_access_data_upload_with_userdata(void *buf, size_t buf_len, enum U
  			return IOTEX_DEV_ACCESS_ERR_BAD_INPUT_PARAMETER;
  	}
 
+#ifdef CONFIG_USER_DATA_SIGNATURE_ENABLE
  	psa_sign_message( g_signkey, PSA_ALG_ECDSA(PSA_ALG_SHA_256), (const uint8_t *)message, message_len, (uint8_t *)sign_buf, 64, &sign_len);
+#endif
 
  	upload.has_payload = true;
+
+#ifdef CONFIG_USER_DATA_SIGNATURE_ENABLE
  	upload.payload.sign.size = sign_len;
  	memcpy(upload.payload.sign.bytes, sign_buf, sign_len);
-
-
+#else
+	upload.payload.sign.size = 0;
+#endif
+	
 	memset(buffer, 0, Upload_size);
 	ostream_upload  = pb_ostream_from_buffer(buffer, Upload_size);
 	if (!pb_encode(&ostream_upload, Upload_fields, &upload)) {

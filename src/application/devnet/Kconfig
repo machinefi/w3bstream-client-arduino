@@ -67,6 +67,25 @@ menu "Applications"
                 
         endmenu
 
+        menuconfig USER_DATA_SIGNATURE_ENABLE
+            bool "Enable User Data Signature"
+
+        if USER_DATA_SIGNATURE_ENABLE
+
+            choice USER_DATA_SIGNATURE_CURVE
+                prompt "Select Signature Curve"
+                depends on USER_DATA_SIGNATURE_ENABLE
+
+                    config USER_DATA_SIGNATURE_CURVE_SECP256K1
+                        bool "SECP256K1"
+                    
+                    config USER_DATA_SIGNATURE_CURVE_SECP256R1
+                        bool "SECP256R1"
+        
+            endchoice
+
+        endif
+
     endif
 
 endmenu
